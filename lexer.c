@@ -2,48 +2,8 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
-
-static const char* hexa_chars = "ABCDEF";
-
-#if !defined(TokenType)
-	typedef enum {
-		TOKEN_PLUS,
-		TOKEN_MINUS,
-		TOKEN_MUL,
-		TOKEN_DIV,
-		TOKEN_LPAREN,
-		TOKEN_RPAREN,
-		TOKEN_NUMBER,
-		TOKEN_BINARY,
-		TOKEN_OCTAL,
-		TOKEN_DECIMAL,
-		TOKEN_HEXA,
-		TOKEN_UNKNOWN,
-		TOKEN_END,
-	} TokenType;
-#endif
-
-#if !defined(Token)
-	typedef struct {
-		TokenType type;
-		char *value;
-	} Token;
-
-#endif
-
-#if !defined(Lexer)
-	typedef struct {
-		char *text;
-		size_t pos;
-	} Lexer;
-#endif
-
-static unsigned short int ishexachar(char ch) {
-	for (unsigned short int i = 0; i < strlen(hexa_chars); i++)
-		if (ch == hexa_chars[i]) return 1;
-
-	return 0;
-}
+#include "lexer.h"
+#include "util.h"
 
 Lexer lexer(char *text) {
 	Lexer lex = {text, 0};
@@ -58,11 +18,11 @@ Token next(Lexer *lex) {
 			continue;
 		}
 
-		if (isdigit(ch) || ishexachar(ch)) {
+		if (isdigit(ch) || ishexachar(ch) || isdelimiter(ch)) {
 			size_t num_start = lex->pos;
 			char *value;
 
-			while (isdigit(lex->text[lex->pos]) || ishexachar(lex->text[lex->pos])) {
+			while (isdigit(lex->text[lex->pos]) || ishexachar(lex->text[lex->pos]) || isdelimiter(lex->text[lex->pos])) {
 				lex->pos++;
 			}
 
@@ -92,15 +52,4 @@ Token next(Lexer *lex) {
 	}
 
 	return (Token){TOKEN_END, strdup("END")};
-}
-
-int main() {
-	Lexer lex = lexer("b(010001110)+d(55)*o(21)/h(BADCAFE)");
-	Token token;
-
-	do {
-		token = next(&lex);
-		printf("Type: %d, Value: %s\n", token.type, token.value);
-		free(token.value);
-	} while (token.type != TOKEN_END);
 }
