@@ -8,7 +8,6 @@ static void eat(Parser *parser, TokenType type) {
 		free(parser->current_token.value);
 		parser->current_token = next(parser->lexer);
 	}
-
 	// implementar erro
 }
 
@@ -23,8 +22,8 @@ static double parse_factor(Parser *parser) {
 		return result;
 	}
 
-	if (token.type == TOKEN_BINARY || token.type == TOKEN_OCTAL || token.type == TOKEN_DECIMAL || token.type == TOKEN_HEXA) {
 		eat(parser, token.type);
+	if (token.type == TOKEN_BINARY || token.type == TOKEN_OCTAL || token.type == TOKEN_DECIMAL || token.type == TOKEN_HEXA) {
 		eat(parser, TOKEN_LPAREN);
 		result = any_to_decimal(parser->current_token.value, token.type);
 		eat(parser, TOKEN_NUMBER);
@@ -33,8 +32,8 @@ static double parse_factor(Parser *parser) {
 	}
 
 	// implementar erro
-}
 
+}
 static double parse_term(Parser *parser) {
 	double result = parse_factor(parser);
 
@@ -82,11 +81,11 @@ static double parse_expression(Parser *parser) {
 }
 
 int main() {
-	Lexer lex = lexer("d(502)*b(10)");
+	Lexer lex = lexer("b(11010)*h(BADCAFE)+o(74)");
 	Parser parser = {&lex, next(&lex)};
 	double result = parse_expression(&parser);
 	printf("%lf\n", result);
 
-	double test = any_to_decimal("BADCAFE", 16);
-	printf("test: %lf\n", test);
+	char* test = any_to_binary("45.54", 10);
+	printf("test: %s\n", test);
 }

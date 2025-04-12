@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "util.h"
 
 bool ishexachar(char ch) {
@@ -17,11 +18,25 @@ bool isdelimiter(char ch) {
 	return false;
 }
 
+void append_char(char *str, char ch) {
+    str[strlen(str)] = ch;
+    str[strlen(str)+1] = '\0';
+}
+
+void reverse_binary(char *str) {
+
+}
+
 unsigned short int char_to_digit(char ch) {
     if (isdigit(ch)) return ch - '0';
     if (ch >= 'A' && ch <= 'F') return 10 + (ch - 'A');
     if (ch >= 'a' && ch <= 'f') return 10 + (ch - 'a');
     return 0xFFFF;
+}
+
+double floor(double number) {
+    unsigned int floor = (unsigned int)number;
+    return floor;
 }
 
 double modulo(long long int number) {
@@ -36,7 +51,6 @@ double power(unsigned char base, long long int exponent) {
     } else if ((base == 1 && exponent >= 0) || (base != 0 && exponent == 0)) {
         return 1;
     }
-
 
     for (size_t i = 0; i < modulo(exponent); i++)
             result *= base;
@@ -56,7 +70,7 @@ char* any_to_binary(char *value, TokenType base) {
     size_t len = (decimal) ? strlen(decimal) : 0;
     unsigned short int dot = (decimal) ? 1 : 0;
 
-    size_t capacity = (base == TOKEN_HEXA) ? (strlen(integer)+len)*4+dot : (strlen(integer)+len)*3+dot;
+    size_t capacity = (base == TOKEN_HEXA || base == TOKEN_DECIMAL) ? (strlen(integer)+len)*4+dot : (strlen(integer)+len)*3+dot;
     char* result = (char *)calloc(capacity, sizeof(char));
 
     switch (base) {
@@ -71,9 +85,8 @@ char* any_to_binary(char *value, TokenType base) {
                     strcat(result, hex_to_bin[char_to_digit(decimal[i])]);
             }
 
-            return result;
+            break;
         case TOKEN_OCTAL:
-
             for (size_t i = 0; i < strlen(integer); i++)
                 strcat(result, octal_to_bin[char_to_digit(integer[i])]);
 
@@ -84,15 +97,40 @@ char* any_to_binary(char *value, TokenType base) {
                     strcat(result, octal_to_bin[char_to_digit(decimal[i])]);
             }
 
-            return result;
-
+            break;
         case TOKEN_DECIMAL:
+            unsigned int int_integer = atoi(integer);
+            char ch;
+
+            for (size_t i = 0; int_integer > 0; i++) {
+                ch = (int_integer % 2) + '0';
+                int_integer /= 2;
+
+                append_char(result, ch);
+            }
+
+            if (decimal) {
+                result[strlen(result)] = '.';
+                
+                unsigned int int_decimal = atoi(decimal);
+                double remainder = int_decimal/power(10, strlen(decimal));
+
+                for (size_t i = 0; i < strlen(decimal) + 4; i++) {
+                    remainder *= 2;
+                    ch = (int)remainder + '0';
+                    append_char(result, ch);
+                    remainder -= floor(remainder);
+
+                    if (remainder == 0.0f) break;
+                }
+            }
+
             break;
         default:
             break;
     }
 
-    return NULL;
+    return result;
 }
 
 double any_to_decimal(char *value, TokenType base) {

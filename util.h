@@ -40,7 +40,10 @@ static const char octal_to_bin[8][4] = {
 
 bool ishexachar(char);
 bool isdelimiter(char);
+void append_char(char *, char);
+void reverse_binary(char *); 
 unsigned short int char_to_digit(char);
+double floor(double);
 double modulo(long long int);
 double power(unsigned char, long long int);
 char* any_to_binary(char *, TokenType) ;
