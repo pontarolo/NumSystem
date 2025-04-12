@@ -59,13 +59,13 @@ static const char decimal_to_hex[16] = {
 bool ishexachar(char);
 bool isdelimiter(char);
 void append_char(char *, char);
-void reverse_binary(char *); 
+char *double_to_string(double number);
+void reverse_range(char *, size_t, size_t);
 unsigned short int char_to_digit(char);
 double floor(double);
 double modulo(long long int);
 double power(unsigned char, long long int);
+char *any_to_hexa(char *, TokenType);
 char* any_to_binary(char *, TokenType) ;
 double any_to_decimal(char *, TokenType);
-char *string_in_given_base(const char *, TokenType, TokenType); 
-
 #endif

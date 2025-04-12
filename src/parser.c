@@ -87,6 +87,6 @@ int main() {
 	double result = parse_expression(&parser);
 	printf("%lf\n", result);
 
-	char* test = any_to_binary("45.75", 10);
+	char* test = any_to_hexa("195939070.625", 10);
 	printf("test: %s\n", test);
 }
