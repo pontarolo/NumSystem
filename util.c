@@ -16,6 +16,7 @@ bool isdelimiter(char ch) {
 
 	return false;
 }
+
 unsigned short int char_to_digit(char ch) {
     if (isdigit(ch)) return ch - '0';
     if (ch >= 'A' && ch <= 'F') return 10 + (ch - 'A');
@@ -45,6 +46,55 @@ double power(unsigned char base, long long int exponent) {
     return result;
 }
 
+char* any_to_binary(char *value, TokenType base) {
+    char *copy = strdup(value);
+    if (!copy) return 0;
+
+    char *integer = strtok(copy, ".");
+    char *decimal = strtok(NULL, ".");
+
+    size_t len = (decimal) ? strlen(decimal) : 0;
+    unsigned short int dot = (decimal) ? 1 : 0;
+
+    size_t capacity = (base == TOKEN_HEXA) ? (strlen(integer)+len)*4+dot : (strlen(integer)+len)*3+dot;
+    char* result = (char *)calloc(capacity, sizeof(char));
+
+    switch (base) {
+        case TOKEN_HEXA:
+            for (size_t i = 0; i < strlen(integer); i++)
+                strcat(result, hex_to_bin[char_to_digit(integer[i])]);
+
+            if (decimal) {
+                result[strlen(result)] = '.';
+
+                for (size_t i = 0; i < strlen(decimal); i++)
+                    strcat(result, hex_to_bin[char_to_digit(decimal[i])]);
+            }
+
+            return result;
+        case TOKEN_OCTAL:
+
+            for (size_t i = 0; i < strlen(integer); i++)
+                strcat(result, octal_to_bin[char_to_digit(integer[i])]);
+
+            if (decimal) {
+                result[strlen(result)] = '.';
+
+                for (size_t i = 0; i < strlen(decimal); i++)
+                    strcat(result, octal_to_bin[char_to_digit(decimal[i])]);
+            }
+
+            return result;
+
+        case TOKEN_DECIMAL:
+            break;
+        default:
+            break;
+    }
+
+    return NULL;
+}
+
 double any_to_decimal(char *value, TokenType base) {
     double integer_result = 0.0f;
     double decimal_result = 0.0f;
@@ -55,6 +105,10 @@ double any_to_decimal(char *value, TokenType base) {
 
     char *integer = strtok(copy, ".");
     char *decimal = strtok(NULL, ".");
+
+    if (base == TOKEN_HEXA) {
+        return any_to_decimal(any_to_binary(value, 16), 2);
+    }
 
     for (size_t i = 0; i < strlen(integer); i++) {
         digit = char_to_digit(integer[i]);

@@ -87,6 +87,6 @@ int main() {
 	double result = parse_expression(&parser);
 	printf("%lf\n", result);
 
-	double test = any_to_decimal("101", 2);
+	double test = any_to_decimal("BADCAFE", 16);
 	printf("test: %lf\n", test);
 }
