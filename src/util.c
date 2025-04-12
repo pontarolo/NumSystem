@@ -60,6 +60,10 @@ double power(unsigned char base, long long int exponent) {
     return result;
 }
 
+char *any_to_hexa(char *value, TokenType base) {
+    
+}
+
 char* any_to_binary(char *value, TokenType base) {
     char *copy = strdup(value);
     if (!copy) return 0;

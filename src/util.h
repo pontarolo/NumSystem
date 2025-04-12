@@ -37,7 +37,6 @@ static const char octal_to_bin[8][4] = {
     "111" 
 };
 
-
 bool ishexachar(char);
 bool isdelimiter(char);
 void append_char(char *, char);
