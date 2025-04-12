@@ -23,10 +23,6 @@ void append_char(char *str, char ch) {
     str[strlen(str)+1] = '\0';
 }
 
-void reverse_binary(char *str) {
-
-}
-
 unsigned short int char_to_digit(char ch) {
     if (isdigit(ch)) return ch - '0';
     if (ch >= 'A' && ch <= 'F') return 10 + (ch - 'A');
@@ -61,7 +57,7 @@ double power(unsigned char base, long long int exponent) {
 }
 
 char *any_to_hexa(char *value, TokenType base) {
-    
+
 }
 
 char* any_to_binary(char *value, TokenType base) {
@@ -128,7 +124,6 @@ char* any_to_binary(char *value, TokenType base) {
                     if (remainder == 0.0f) break;
                 }
             }
-
             break;
         default:
             break;

@@ -34,6 +34,7 @@ static double parse_factor(Parser *parser) {
 	// implementar erro
 
 }
+
 static double parse_term(Parser *parser) {
 	double result = parse_factor(parser);
 
@@ -81,11 +82,11 @@ static double parse_expression(Parser *parser) {
 }
 
 int main() {
-	Lexer lex = lexer("b(11010)*h(BADCAFE)+o(74)");
+	Lexer lex = lexer("b(1010.1)*b(1010.1)");
 	Parser parser = {&lex, next(&lex)};
 	double result = parse_expression(&parser);
 	printf("%lf\n", result);
 
-	char* test = any_to_binary("45.54", 10);
+	char* test = any_to_binary("45.75", 10);
 	printf("test: %s\n", test);
 }

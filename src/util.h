@@ -37,6 +37,25 @@ static const char octal_to_bin[8][4] = {
     "111" 
 };
 
+static const char decimal_to_hex[16] = {
+    '0', 
+    '1', 
+    '2', 
+    '3', 
+    '4', 
+    '5', 
+    '6', 
+    '7',
+    '8',
+    '9',
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F'
+};
+
 bool ishexachar(char);
 bool isdelimiter(char);
 void append_char(char *, char);
