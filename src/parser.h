@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include "lexer.h"
 
-#if !defined (Parser)
-	typedef struct {
-		Lexer *lexer;
-		Token current_token;
-	} Parser;
+#if !defined(Parser)
+typedef struct
+{
+	Lexer *lexer;
+	Token current_token;
+} Parser;
 #endif
 
-static double decimal(const char *, TokenType);
 static void eat(Parser *, TokenType);
 static double parse_factor(Parser *);
 static double parse_term(Parser *);

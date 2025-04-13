@@ -5,10 +5,23 @@
 #include <stdbool.h>
 #include "lexer.h"
 
-static const char *hexa_chars = "ABCDEF";
-static const char *delimiter_chars = ".,";
+#if !defined(FPoint)
+typedef struct
+{
+    char *integer;
+    char *decimal;
+    bool hasDecimal;
+} FPoint;
+#endif
+
+#ifndef PRECISION
+#define PRECISION 8
+#endif
+
+static const char *hexa_char = "ABCDEF";
+static const char *dot_char = ".,";
 static const char hex_to_bin[16][5] = {
-    "0000", 
+    "0000",
     "0001",
     "0010",
     "0011",
@@ -23,8 +36,7 @@ static const char hex_to_bin[16][5] = {
     "1100",
     "1101",
     "1110",
-    "1111" 
-};
+    "1111"};
 
 static const char octal_to_bin[8][4] = {
     "000",
@@ -34,17 +46,16 @@ static const char octal_to_bin[8][4] = {
     "100",
     "101",
     "110",
-    "111" 
-};
+    "111"};
 
 static const char decimal_to_hex[16] = {
-    '0', 
-    '1', 
-    '2', 
-    '3', 
-    '4', 
-    '5', 
-    '6', 
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
     '7',
     '8',
     '9',
@@ -53,19 +64,17 @@ static const char decimal_to_hex[16] = {
     'C',
     'D',
     'E',
-    'F'
-};
+    'F'};
 
 bool ishexachar(char);
-bool isdelimiter(char);
-void append_char(char *, char);
-char *double_to_string(double number);
-void reverse_range(char *, size_t, size_t);
-unsigned short int char_to_digit(char);
-double floor(double);
-double modulo(long long int);
-double power(unsigned char, long long int);
-char *any_to_hexa(char *, TokenType);
-char* any_to_binary(char *, TokenType) ;
-double any_to_decimal(char *, TokenType);
+bool isdot(char);
+static void append_char(char *, char);
+static char *double_to_string(double);
+static void reverse_range(char *, size_t, size_t);
+static unsigned short int char_to_digit(char);
+static FPoint break_str(const char *, const char *);
+static size_t calculate_digits(double, TokenType);
+char *hexa(char *, TokenType);
+char *binary(char *, TokenType);
+double decimal(char *, TokenType);
 #endif

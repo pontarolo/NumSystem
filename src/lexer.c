@@ -5,24 +5,30 @@
 #include "lexer.h"
 #include "util.h"
 
-Lexer lexer(char *text) {
+Lexer lexer(char *text)
+{
 	Lexer lex = {text, 0};
 	return lex;
 }
 
-Token next(Lexer *lex) {
-	while (lex->text[lex->pos] != '\0') {
+Token next(Lexer *lex)
+{
+	while (lex->text[lex->pos] != '\0')
+	{
 		char ch = lex->text[lex->pos];
-		if (isspace(ch)) {
+		if (isspace(ch))
+		{
 			lex->pos++;
 			continue;
 		}
 
-		if (isdigit(ch) || ishexachar(ch) || isdelimiter(ch)) {
+		if (isdigit(ch) || ishexachar(ch) || isdot(ch))
+		{
 			size_t num_start = lex->pos;
 			char *value;
 
-			while (isdigit(lex->text[lex->pos]) || ishexachar(lex->text[lex->pos]) || isdelimiter(lex->text[lex->pos])) {
+			while (isdigit(lex->text[lex->pos]) || ishexachar(lex->text[lex->pos]) || isdot(lex->text[lex->pos]))
+			{
 				lex->pos++;
 			}
 
@@ -36,18 +42,30 @@ Token next(Lexer *lex) {
 
 		lex->pos++;
 
-		switch (ch) {
-			case '+': return (Token){TOKEN_PLUS, strdup("+")};
-			case '-': return (Token){TOKEN_MINUS, strdup("-")};
-			case '*': return (Token){TOKEN_MUL, strdup("*")};
-			case '/': return (Token){TOKEN_DIV, strdup("/")};
-			case '(': return (Token){TOKEN_LPAREN, strdup("(")};
-			case ')': return (Token){TOKEN_RPAREN, strdup(")")};
-			case 'b': return (Token){TOKEN_BINARY, strdup("b")};
-			case 'o': return (Token){TOKEN_OCTAL, strdup("o")};
-			case 'd': return (Token){TOKEN_DECIMAL, strdup("d")};
-			case 'h': return (Token){TOKEN_HEXA, strdup("h")};
-			default: return (Token){TOKEN_UNKNOWN, NULL};
+		switch (ch)
+		{
+		case '+':
+			return (Token){TOKEN_PLUS, strdup("+")};
+		case '-':
+			return (Token){TOKEN_MINUS, strdup("-")};
+		case '*':
+			return (Token){TOKEN_MUL, strdup("*")};
+		case '/':
+			return (Token){TOKEN_DIV, strdup("/")};
+		case '(':
+			return (Token){TOKEN_LPAREN, strdup("(")};
+		case ')':
+			return (Token){TOKEN_RPAREN, strdup(")")};
+		case 'b':
+			return (Token){TOKEN_BINARY, strdup("b")};
+		case 'o':
+			return (Token){TOKEN_OCTAL, strdup("o")};
+		case 'd':
+			return (Token){TOKEN_DECIMAL, strdup("d")};
+		case 'h':
+			return (Token){TOKEN_HEXA, strdup("h")};
+		default:
+			return (Token){TOKEN_UNKNOWN, NULL};
 		}
 	}
 

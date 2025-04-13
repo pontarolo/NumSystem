@@ -2,47 +2,50 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <math.h>
 #include "util.h"
 
 bool ishexachar(char ch)
 {
-    for (unsigned short int i = 0; i < strlen(hexa_chars); i++)
-        if (ch == hexa_chars[i])
+    for (unsigned short int i = 0; i < strlen(hexa_char); i++)
+        if (ch == hexa_char[i])
             return true;
 
     return false;
 }
 
-bool isdelimiter(char ch)
+bool isdot(char ch)
 {
-    for (unsigned short int i = 0; i < strlen(delimiter_chars); i++)
-        if (ch == delimiter_chars[i])
+    for (unsigned short int i = 0; i < strlen(dot_char); i++)
+        if (ch == dot_char[i])
             return true;
 
     return false;
 }
 
-void append_char(char *str, char ch)
+static void append_char(char *str, char ch)
 {
     size_t len = strlen(str);
     str[len] = ch;
     str[len + 1] = '\0';
-
 }
 
-char *double_to_string(double number) {
+static char *double_to_string(double number)
+{
     size_t size = snprintf(NULL, 0, "%f", number);
-    if (size < 0) return NULL;
+    if (size < 0)
+        return NULL;
 
     char *str = malloc(size + 1);
-    if (!str) return NULL;
+    if (!str)
+        return NULL;
 
     snprintf(str, size + 1, "%f", number);
 
     return str;
 }
 
-void reverse_range(char *str, size_t start, size_t end)
+static void reverse_range(char *str, size_t start, size_t end)
 {
     while (start < end)
     {
@@ -54,7 +57,7 @@ void reverse_range(char *str, size_t start, size_t end)
     }
 }
 
-unsigned short int char_to_digit(char ch)
+static unsigned short int char_to_digit(char ch)
 {
     if (isdigit(ch))
         return ch - '0';
@@ -65,189 +68,109 @@ unsigned short int char_to_digit(char ch)
     return 0xFFFF;
 }
 
-double floor(double number)
+static FPoint break_str(const char *value, const char *dot)
 {
-    unsigned int floor = (unsigned int)number;
-    return floor;
-}
+    FPoint number;
 
-double modulo(long long int number)
-{
-    return (number > 0) ? number : -number;
-}
-
-double power(unsigned char base, long long int exponent)
-{
-    double result = 1.0f;
-
-    if (base == 0 && exponent == 0)
-    {
-        return 0;
-    }
-    else if ((base == 1 && exponent >= 0) || (base != 0 && exponent == 0))
-    {
-        return 1;
-    }
-
-    for (size_t i = 0; i < modulo(exponent); i++)
-        result *= base;
-
-    result = (exponent > 0) ? result : 1 / result;
-
-    return result;
-}
-
-char *any_to_hexa(char *value, TokenType base)
-{
     char *copy = strdup(value);
     if (!copy)
-        return 0;
+        return (FPoint){NULL, NULL, false};
 
     char *integer = strtok(copy, ".");
     char *decimal = strtok(NULL, ".");
 
-    char *result = (char *)calloc(strlen(value) * 2 + 2, sizeof(char));
+    number.integer = strdup(integer);
+    number.decimal = decimal ? strdup(decimal) : NULL;
+    number.hasDecimal = decimal ? true : false;
 
-    switch (base)
-    {
-    case TOKEN_BINARY:
-        char bin_str[5];
+    free(copy);
 
-        for (size_t i = 0; i < strlen(integer); i += 4)
-        {
-            size_t j;
-            for (j = 0; j < 4 && (i + j) < strlen(integer); j++)
-                bin_str[j] = integer[i + j];
-
-            bin_str[j] = '\0';
-            append_char(result, decimal_to_hex[(int)any_to_decimal(bin_str, 2)]);
-        }
-
-        if (decimal)
-        {
-            append_char(result, '.');
-            for (size_t i = 0; i < strlen(decimal); i += 4)
-            {
-                size_t j;
-                for (j = 0; j < 4 && (i + j) < strlen(decimal); j++)
-                    bin_str[j] = decimal[i + j];
-
-                bin_str[j] = '\0';
-                append_char(result, decimal_to_hex[(int)any_to_decimal(bin_str, 2)]);
-            }
-        }
-
-        break;
-
-    case TOKEN_OCTAL:
-        return any_to_hexa(any_to_binary(value, 8), 2);
-    case TOKEN_DECIMAL:
-        return any_to_hexa(any_to_binary(value, 10), 2);
-    default:
-        break;
-    }
-
-    return result;
+    return number;
 }
 
-char *any_to_binary(char *value, TokenType base)
+static size_t calculate_digits(double number, TokenType base)
 {
-    char *copy = strdup(value);
-    if (!copy)
-        return 0;
+    return (size_t)ceil(log(number) / log(base)) + 1;
+}
 
-    char *integer = strtok(copy, ".");
-    char *decimal = strtok(NULL, ".");
+char *hexa(char *value, TokenType base)
+{
+}
 
-    size_t len = (decimal) ? strlen(decimal) : 0;
-    unsigned short int dot = (decimal) ? 1 : 0;
+char *binary(char *value, TokenType base)
+{
 
-    size_t capacity = (base == TOKEN_HEXA || base == TOKEN_DECIMAL) ? (strlen(integer) + len) * 4 + dot : (strlen(integer) + len) * 3 + dot;
-    char *result = (char *)calloc(capacity, sizeof(char));
+    FPoint number = break_str(value, ".");
+    char *result = (char *)calloc(calculate_digits(decimal(value, base), TOKEN_BINARY), sizeof(char));
 
     switch (base)
     {
     case TOKEN_DECIMAL:
-        unsigned int int_integer = atoi(integer);
+        unsigned int integer_number = atoi(number.integer);
         char ch;
 
-        for (size_t i = 0; int_integer > 0; i++)
+        for (size_t i = 0; integer_number > 0; i++)
         {
-            ch = (int_integer % 2) + '0';
-            int_integer /= 2;
+            ch = (integer_number % 2) + '0';
+            integer_number /= 2;
 
             append_char(result, ch);
         }
 
-        if (decimal)
+        reverse_range(result, 0, strlen(result) - 1);
+        size_t dot_pos = strlen(result);
+
+        if (number.hasDecimal)
         {
-            result[strlen(result)] = '.';
+            unsigned int decimal_number = atoi(number.decimal);
+            double remainder = decimal_number / pow(10, strlen(number.decimal));
+            size_t counter = 0;
 
-            unsigned int int_decimal = atoi(decimal);
-            double remainder = int_decimal / power(10, strlen(decimal));
+            append_char(result, '.');
 
-            for (size_t i = 0; i < strlen(decimal); i++)
+            for (;;)
             {
-                remainder *= 2;
+                if (remainder == 0.0f || counter == PRECISION)
+                    break;
+
+                remainder *= TOKEN_BINARY;
                 ch = (int)remainder + '0';
                 append_char(result, ch);
                 remainder -= floor(remainder);
 
-                if (remainder == 0.0f)
-                    break;
+                counter++;
             }
         }
 
-        if (strchr(result, '.')) {
-            size_t dot_pos = strchr(result, '.') - result;
-
-            reverse_range(result, 0, dot_pos - 1);
-
-            reverse_range(result, dot_pos + 1, strlen(result) - 1);
-        } else 
-            reverse_range(result, 0, strlen(result) - 1);
-        break;
+        return result;
     case TOKEN_OCTAL:
-        return any_to_binary(double_to_string(any_to_decimal(value, TOKEN_OCTAL)), TOKEN_DECIMAL);
+        return binary(double_to_string(decimal(value, TOKEN_OCTAL)), TOKEN_DECIMAL);
     case TOKEN_HEXA:
-            return any_to_binary(double_to_string(any_to_decimal(value, 16)), 2);
-        break;
+        return binary(double_to_string(decimal(value, TOKEN_HEXA)), TOKEN_DECIMAL);
     default:
         break;
     }
-
-    return result;
 }
 
-double any_to_decimal(char *value, TokenType base)
+double decimal(char *value, TokenType base)
 {
-    double integer_result = 0.0f;
-    double decimal_result = 0.0f;
-    unsigned short int digit;
+    FPoint number = break_str(value, ".");
+    double integer_sum = 0, decimal_sum = 0;
 
-    char *copy = strdup(value);
-    if (!copy)
-        return 0;
-
-    char *integer = strtok(copy, ".");
-    char *decimal = strtok(NULL, ".");
-
-    for (size_t i = 0; i < strlen(integer); i++)
+    for (size_t i = 0; i < strlen(number.integer); i++)
     {
-        digit = char_to_digit(integer[i]);
-        if (digit >= 0 && digit < base)
-            integer_result += digit * power(base, strlen(integer) - i - 1);
+        if (number.integer[i] == '0')
+            continue;
+        integer_sum += char_to_digit(number.integer[i]) * pow(base, strlen(number.integer) - i - 1);
     }
 
-    if (decimal)
-        for (size_t i = 0; i < strlen(decimal); i++)
+    if (number.hasDecimal)
+        for (size_t i = 0; i < strlen(number.decimal); i++)
         {
-            digit = char_to_digit(decimal[i]);
-            if (digit >= 0 && digit < base)
-                decimal_result += digit * power(base, -(i + 1));
+            if (number.decimal[i] == '0')
+                continue;
+            decimal_sum += char_to_digit(number.decimal[i]) * pow(base, -(int)(i + 1));
         }
 
-    free(copy);
-
-    return integer_result + decimal_result;
+    return (number.hasDecimal) ? integer_sum + decimal_sum / pow(10, strlen(number.decimal - 1)) : integer_sum;
 }
