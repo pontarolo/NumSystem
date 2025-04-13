@@ -41,7 +41,7 @@ static const char decimal_to_hexa[16] = {
 bool ishexachar(char);
 bool isdot(char);
 static void append_char(char *, char);
-static char *double_to_string(double);
+char *double_to_string(double);
 static void reverse_range(char *, size_t, size_t);
 static unsigned short int char_to_digit(char);
 static FPoint break_str(const char *, const char *);
@@ -50,4 +50,5 @@ char *octal(char *, TokenType);
 char *hexa(char *, TokenType);
 char *binary(char *, TokenType);
 double decimal(char *, TokenType);
+char *string_in_given_base(char *value, TokenType src, TokenType dest);
 #endif

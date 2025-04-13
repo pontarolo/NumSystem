@@ -30,7 +30,7 @@ static void append_char(char *str, char ch)
     str[len + 1] = '\0';
 }
 
-static char *double_to_string(double number)
+char *double_to_string(double number)
 {
     size_t size = snprintf(NULL, 0, "%f", number);
     if (size < 0)
@@ -276,4 +276,14 @@ double decimal(char *value, TokenType base)
         }
 
     return (number.hasDecimal) ? integer_sum + decimal_sum / pow(10, strlen(number.decimal - 1)) : integer_sum;
+}
+
+char *string_in_given_base(char *value, TokenType src, TokenType dest) {
+    switch (dest) {
+        case TOKEN_BINARY: return binary(value, src);
+        case TOKEN_OCTAL: return octal(value, src);
+        case TOKEN_DECIMAL: return double_to_string(decimal(value, src));
+        case TOKEN_HEXA: return hexa(value, src);
+        default: break;
+    }
 }
