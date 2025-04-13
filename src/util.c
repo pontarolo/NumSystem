@@ -95,9 +95,57 @@ static size_t calculate_digits(double number, TokenType base)
     return (size_t)ceil(log(number) / log(base)) + 1;
 }
 
-char *octal(char *value, TokenType base) {
+char *octal(char *value, TokenType base)
+{
     FPoint number = break_str(value, ".");
     char *result = (char *)calloc(calculate_digits(decimal(value, base), TOKEN_OCTAL), sizeof(char));
+
+    switch (base)
+    {
+    case TOKEN_DECIMAL:
+        unsigned int integer_number = atoi(number.integer);
+        char ch;
+
+        for (size_t i = 0; integer_number > 0; i++)
+        {
+            ch = (integer_number % TOKEN_OCTAL) + '0';
+            integer_number /= TOKEN_OCTAL;
+
+            append_char(result, ch);
+        }
+
+        reverse_range(result, 0, strlen(result) - 1);
+
+        if (number.hasDecimal)
+        {
+            unsigned int decimal_number = atoi(number.decimal);
+            double remainder = decimal_number / pow(10, strlen(number.decimal));
+            size_t counter = 0;
+
+            append_char(result, '.');
+
+            for (;;)
+            {
+                if (remainder == 0.0f || counter == PRECISION)
+                    break;
+
+                remainder *= TOKEN_OCTAL;
+                ch = (int)remainder + '0';
+                append_char(result, ch);
+                remainder -= floor(remainder);
+
+                counter++;
+            }
+        }
+
+        return result;
+    case TOKEN_BINARY:
+        return octal(double_to_string(decimal(value, TOKEN_BINARY)), TOKEN_DECIMAL);
+    case TOKEN_HEXA:
+        return octal(double_to_string(decimal(value, TOKEN_HEXA)), TOKEN_DECIMAL);
+    default:
+        break;
+    }
 }
 
 char *hexa(char *value, TokenType base)
@@ -119,7 +167,7 @@ char *hexa(char *value, TokenType base)
             append_char(result, ch);
         }
 
-        reverse_range(result, 0, strlen(result)-1);
+        reverse_range(result, 0, strlen(result) - 1);
 
         if (number.hasDecimal)
         {

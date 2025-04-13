@@ -15,6 +15,6 @@ typedef struct
 static void eat(Parser *, TokenType);
 static double parse_factor(Parser *);
 static double parse_term(Parser *);
-static double parse_expression(Parser *);
+double parse_expression(Parser *);
 
 #endif

@@ -46,6 +46,7 @@ static void reverse_range(char *, size_t, size_t);
 static unsigned short int char_to_digit(char);
 static FPoint break_str(const char *, const char *);
 static size_t calculate_digits(double, TokenType);
+char *octal(char *, TokenType);
 char *hexa(char *, TokenType);
 char *binary(char *, TokenType);
 double decimal(char *, TokenType);

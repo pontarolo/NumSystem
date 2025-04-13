@@ -65,7 +65,7 @@ static double parse_term(Parser *parser)
 	return result;
 }
 
-static double parse_expression(Parser *parser)
+double parse_expression(Parser *parser)
 {
 	double result = parse_term(parser);
 
@@ -89,16 +89,4 @@ static double parse_expression(Parser *parser)
 	}
 
 	return result;
-}
-
-int main()
-{
-	Lexer lex = lexer("h(BADCAFE.BAD)");
-	Parser parser = {&lex, next(&lex)};
-	double result = parse_expression(&parser);
-	printf("%lf\n", result);
-
-	printf("---------- TESTES ----------\n");
-
-	printf("binary: %s \n", hexa("1011101011011100101011111110", TOKEN_BINARY));
 }
