@@ -95,6 +95,11 @@ static size_t calculate_digits(double number, TokenType base)
     return (size_t)ceil(log(number) / log(base)) + 1;
 }
 
+char *octal(char *value, TokenType base) {
+    FPoint number = break_str(value, ".");
+    char *result = (char *)calloc(calculate_digits(decimal(value, base), TOKEN_OCTAL), sizeof(char));
+}
+
 char *hexa(char *value, TokenType base)
 {
     FPoint number = break_str(value, ".");
