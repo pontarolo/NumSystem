@@ -20,7 +20,7 @@ typedef struct
 
 static const char *hexa_char = "ABCDEF";
 static const char *dot_char = ".,";
-static const char hex_to_bin[16][5] = {
+static const char hexa_to_bin[16][5] = {
     "0000",
     "0001",
     "0010",
@@ -48,7 +48,7 @@ static const char octal_to_bin[8][4] = {
     "110",
     "111"};
 
-static const char decimal_to_hex[16] = {
+static const char decimal_to_hexa[16] = {
     '0',
     '1',
     '2',

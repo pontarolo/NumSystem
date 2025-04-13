@@ -42,7 +42,9 @@ static char *double_to_string(double number)
 
     snprintf(str, size + 1, "%f", number);
 
-    return str;
+    FPoint fpoint = break_str(str, ".");
+
+    return (atoi(fpoint.decimal) == 0) ? fpoint.integer : str;
 }
 
 static void reverse_range(char *str, size_t start, size_t end)
@@ -95,6 +97,55 @@ static size_t calculate_digits(double number, TokenType base)
 
 char *hexa(char *value, TokenType base)
 {
+    FPoint number = break_str(value, ".");
+    char *result = (char *)calloc(calculate_digits(decimal(value, base), TOKEN_HEXA), sizeof(char));
+
+    switch (base)
+    {
+    case TOKEN_DECIMAL:
+        unsigned int integer_number = atoi(number.integer);
+        char ch;
+
+        for (size_t i = 0; integer_number > 0; i++)
+        {
+            ch = decimal_to_hexa[integer_number % TOKEN_HEXA];
+            integer_number /= TOKEN_HEXA;
+
+            append_char(result, ch);
+        }
+
+        reverse_range(result, 0, strlen(result)-1);
+
+        if (number.hasDecimal)
+        {
+            unsigned int decimal_number = atoi(number.decimal);
+            double remainder = decimal_number / pow(10, strlen(number.decimal));
+            size_t counter = 0;
+
+            append_char(result, '.');
+
+            for (;;)
+            {
+                if (remainder == 0.0f || counter == PRECISION)
+                    break;
+
+                remainder *= TOKEN_HEXA;
+                ch = decimal_to_hexa[(int)remainder];
+                append_char(result, ch);
+                remainder -= floor(remainder);
+
+                counter++;
+            }
+        }
+
+        return result;
+    case TOKEN_BINARY:
+        return hexa(double_to_string(decimal(value, TOKEN_BINARY)), TOKEN_DECIMAL);
+    case TOKEN_OCTAL:
+        return hexa(double_to_string(decimal(value, TOKEN_OCTAL)), TOKEN_DECIMAL);
+    default:
+        break;
+    }
 }
 
 char *binary(char *value, TokenType base)
@@ -111,14 +162,13 @@ char *binary(char *value, TokenType base)
 
         for (size_t i = 0; integer_number > 0; i++)
         {
-            ch = (integer_number % 2) + '0';
-            integer_number /= 2;
+            ch = (integer_number % TOKEN_BINARY) + '0';
+            integer_number /= TOKEN_BINARY;
 
             append_char(result, ch);
         }
 
         reverse_range(result, 0, strlen(result) - 1);
-        size_t dot_pos = strlen(result);
 
         if (number.hasDecimal)
         {

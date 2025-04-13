@@ -100,5 +100,5 @@ int main()
 
 	printf("---------- TESTES ----------\n");
 
-	printf("binary: %s \n", binary("BAD.DAD", TOKEN_HEXA));
+	printf("binary: %s \n", hexa("1011101011011100101011111110", TOKEN_BINARY));
 }
