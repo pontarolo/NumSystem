@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "lexer.h"
 #include "util.h"
+#include "../lib/colors/colors.h"
 
 Lexer lexer(char *text)
 {

@@ -83,7 +83,7 @@ double parse_expression(Parser *parser)
 			result -= parse_term(parser);
 			break;
 		default:
-			// implementar erro
+			// 
 			break;
 		}
 	}
