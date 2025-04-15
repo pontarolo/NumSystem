@@ -29,10 +29,8 @@ static double parse_factor(Parser *parser)
 	eat(parser, token.type);
 	if (token.type == TOKEN_BINARY || token.type == TOKEN_OCTAL || token.type == TOKEN_DECIMAL || token.type == TOKEN_HEXA)
 	{
-		eat(parser, TOKEN_LPAREN);
 		result = decimal(parser->current_token.value, token.type);
 		eat(parser, TOKEN_NUMBER);
-		eat(parser, TOKEN_RPAREN);
 		return result;
 	}
 
