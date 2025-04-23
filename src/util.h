@@ -1,9 +1,9 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include "lexer.h"
 #include <ctype.h>
 #include <stdbool.h>
-#include "lexer.h"
 
 #if !defined(FPoint)
 typedef struct
@@ -20,23 +20,8 @@ typedef struct
 
 static const char *hexa_char = "ABCDEF";
 static const char *dot_char = ".,";
-static const char decimal_to_hexa[16] = {
-    '0',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F'};
+static const char decimal_to_hexa[16]
+    = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
 bool ishexachar(char);
 bool isdot(char);

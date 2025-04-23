@@ -1,14 +1,14 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include <stdlib.h>
 #include "lexer.h"
+#include <stdlib.h>
 
 #if !defined(Parser)
 typedef struct
 {
-	Lexer *lexer;
-	Token current_token;
+    Lexer *lexer;
+    Token current_token;
 } Parser;
 #endif
 

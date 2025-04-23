@@ -1,14 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "../lib/colors/colors.h"
 #include "lexer.h"
 #include "parser.h"
 #include "util.h"
-#include "../lib/colors/colors.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int main() {
+int main()
+{
     size_t capacity = 64;
-    char *buffer = (char *)calloc(capacity, sizeof(char)); 
+    char *buffer = (char *) calloc(capacity, sizeof(char));
     unsigned short int mode = TOKEN_DECIMAL;
 
     for (;;) {
@@ -16,7 +17,8 @@ int main() {
         fgets(buffer, capacity, stdin);
         buffer[strcspn(buffer, "\n")] = '\0';
 
-        if (strcmp(buffer, "quit") == 0) break;
+        if (strcmp(buffer, "quit") == 0)
+            break;
 
         if (strcmp(buffer, "binary") == 0) {
             mode = TOKEN_BINARY;
@@ -37,10 +39,13 @@ int main() {
         }
 
         Lexer lex = lexer(buffer);
-	    Parser parser = {&lex, next(&lex)};
+        Parser parser = {&lex, next(&lex)};
         double result = parse_expression(&parser);
 
-        printf("%soutput%s ~ %s\n", GREEN, RESET, string_in_given_base(double_to_string(result), TOKEN_DECIMAL, mode));
+        printf("%soutput%s ~ %s\n",
+               GREEN,
+               RESET,
+               string_in_given_base(double_to_string(result), TOKEN_DECIMAL, mode));
     }
     return 0;
 }
