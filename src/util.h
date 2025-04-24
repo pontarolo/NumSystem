@@ -11,6 +11,7 @@ typedef struct
     char *integer;
     char *decimal;
     bool hasDecimal;
+    bool isNegative;
 } FPoint;
 #endif
 
@@ -43,7 +44,7 @@ bool isdot(char);
 static void append_char(char *, char);
 char *double_to_string(double);
 static void reverse_range(char *, size_t, size_t);
-static unsigned short int char_to_digit(char);
+static short int char_to_digit(char);
 static FPoint break_str(const char *, const char *);
 static size_t calculate_digits(double, TokenType);
 char *octal(char *, TokenType);

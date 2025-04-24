@@ -59,7 +59,7 @@ static void reverse_range(char *str, size_t start, size_t end)
     }
 }
 
-static unsigned short int char_to_digit(char ch)
+static short int char_to_digit(char ch)
 {
     if (isdigit(ch))
         return ch - '0';
@@ -84,6 +84,7 @@ static FPoint break_str(const char *value, const char *dot)
     number.integer = strdup(integer);
     number.decimal = decimal ? strdup(decimal) : NULL;
     number.hasDecimal = decimal ? true : false;
+    number.isNegative = (integer[0] == '-');
 
     free(copy);
 
@@ -203,7 +204,6 @@ char *hexa(char *value, TokenType base)
 
 char *binary(char *value, TokenType base)
 {
-
     FPoint number = break_str(value, ".");
     char *result = (char *)calloc(calculate_digits(decimal(value, base), TOKEN_BINARY), sizeof(char));
 
@@ -260,6 +260,8 @@ double decimal(char *value, TokenType base)
     FPoint number = break_str(value, ".");
     double integer_sum = 0, decimal_sum = 0;
 
+    if (number.isNegative) number.integer++;
+
     for (size_t i = 0; i < strlen(number.integer); i++)
     {
         if (number.integer[i] == '0')
@@ -275,7 +277,9 @@ double decimal(char *value, TokenType base)
             decimal_sum += char_to_digit(number.decimal[i]) * pow(base, -(int)(i + 1));
         }
 
-    return (number.hasDecimal) ? integer_sum + decimal_sum / pow(10, strlen(number.decimal - 1)) : integer_sum;
+    double result = (number.hasDecimal) ? integer_sum + decimal_sum / pow(10, strlen(number.decimal - 1)) : integer_sum;
+
+    return number.isNegative ? -result : result;
 }
 
 char *string_in_given_base(char *value, TokenType src, TokenType dest) {

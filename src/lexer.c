@@ -66,6 +66,8 @@ Token next(Lexer *lex)
 		case 'h':
 			return (Token){TOKEN_HEXA, strdup("h")};
 		default:
+			printf("%soutput%s ~ Unknown token: %c\n", RED, RESET, ch);
+			continue;
 			return (Token){TOKEN_UNKNOWN, NULL};
 		}
 	}
