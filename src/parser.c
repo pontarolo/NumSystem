@@ -3,23 +3,25 @@
 #include "parser.h"
 #include "util.h"
 
-static void eat(Parser *parser, TokenType type)
-{
-	if (parser->current_token.type == type)
-	{
+//------------------------------------------------------------------------------------
+// Parser Functions Implementation (Static)
+//------------------------------------------------------------------------------------
+
+// Parser advance
+static void eat(Parser *parser, TokenType type) {
+	if (parser->current_token.type == type) {
 		free(parser->current_token.value);
 		parser->current_token = next(parser->lexer);
-	}
-	// implementar erro
+	} else
+		throw("Can't eat the given token.", false);
 }
 
-static double parse_factor(Parser *parser)
-{
+// For parsing the number themselves
+static double parse_factor(Parser *parser) {
 	Token token = parser->current_token;
 	double result;
 
-	if (token.type == TOKEN_LPAREN)
-	{
+	if (token.type == TOKEN_LPAREN) {
 		eat(parser, TOKEN_LPAREN);
 		result = parse_expression(parser);
 		eat(parser, TOKEN_RPAREN);
@@ -27,25 +29,21 @@ static double parse_factor(Parser *parser)
 	}
 
 	eat(parser, token.type);
-	if (token.type == TOKEN_BINARY || token.type == TOKEN_OCTAL || token.type == TOKEN_DECIMAL || token.type == TOKEN_HEXA)
-	{
+	if (token.type == TOKEN_BINARY || token.type == TOKEN_OCTAL || token.type == TOKEN_DECIMAL || token.type == TOKEN_HEXA) {
 		result = decimal(parser->current_token.value, token.type);
 		eat(parser, TOKEN_NUMBER);
 		return result;
-	}
-
-	// implementar erro
+	} else
+		throw("Invalid factor.", false);
 }
 
-static double parse_term(Parser *parser)
-{
+// For parsing multiplication and division
+static double parse_term(Parser *parser) {
 	double result = parse_factor(parser);
 
-	while (parser->current_token.type == TOKEN_MUL || parser->current_token.type == TOKEN_DIV)
-	{
+	while (parser->current_token.type == TOKEN_MUL || parser->current_token.type == TOKEN_DIV) {
 		Token operand = parser->current_token;
-		switch (operand.type)
-		{
+		switch (operand.type) {
 		case TOKEN_MUL:
 			eat(parser, TOKEN_MUL);
 			result *= parse_factor(parser);
@@ -55,7 +53,7 @@ static double parse_term(Parser *parser)
 			result /= parse_factor(parser);
 			break;
 		default:
-			// implementar erro
+			throw("Invalid term.", false);
 			break;
 		}
 	}
@@ -63,15 +61,18 @@ static double parse_term(Parser *parser)
 	return result;
 }
 
-double parse_expression(Parser *parser)
-{
+//------------------------------------------------------------------------------------
+// Parser Functions Implementation (Normal)
+//------------------------------------------------------------------------------------
+
+
+// For parsing plus and minus
+double parse_expression(Parser *parser) {
 	double result = parse_term(parser);
 
-	while (parser->current_token.type == TOKEN_PLUS || parser->current_token.type == TOKEN_MINUS)
-	{
+	while (parser->current_token.type == TOKEN_PLUS || parser->current_token.type == TOKEN_MINUS) {
 		Token operand = parser->current_token;
-		switch (operand.type)
-		{
+		switch (operand.type) {
 		case TOKEN_PLUS:
 			eat(parser, TOKEN_PLUS);
 			result += parse_term(parser);
@@ -81,7 +82,7 @@ double parse_expression(Parser *parser)
 			result -= parse_term(parser);
 			break;
 		default:
-			// 
+			throw("Invalid expression.", false);
 			break;
 		}
 	}

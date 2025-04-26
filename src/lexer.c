@@ -6,30 +6,30 @@
 #include "util.h"
 #include "../lib/colors/colors.h"
 
-Lexer lexer(char *text)
-{
+//------------------------------------------------------------------------------------
+// Lexer and Token Functions Implementation
+//------------------------------------------------------------------------------------
+
+// Initializes a new lexer
+Lexer lexer(char *text) {
 	Lexer lex = {text, 0};
 	return lex;
 }
 
-Token next(Lexer *lex)
-{
-	while (lex->text[lex->pos] != '\0')
-	{
+// Tokenizer
+Token next(Lexer *lex) {
+	while (lex->text[lex->pos] != '\0') {
 		char ch = lex->text[lex->pos];
-		if (isspace(ch))
-		{
+		if (isspace(ch)) {
 			lex->pos++;
 			continue;
 		}
 
-		if (isdigit(ch) || ishexachar(ch) || isdot(ch))
-		{
+		if (isdigit(ch) || ishexachar(ch) || isdot(ch)) {
 			size_t num_start = lex->pos;
 			char *value;
 
-			while (isdigit(lex->text[lex->pos]) || ishexachar(lex->text[lex->pos]) || isdot(lex->text[lex->pos]))
-			{
+			while (isdigit(lex->text[lex->pos]) || ishexachar(lex->text[lex->pos]) || isdot(lex->text[lex->pos])) {
 				lex->pos++;
 			}
 
@@ -43,8 +43,7 @@ Token next(Lexer *lex)
 
 		lex->pos++;
 
-		switch (ch)
-		{
+		switch (ch) {
 		case '+':
 			return (Token){TOKEN_PLUS, strdup("+")};
 		case '-':
@@ -66,8 +65,6 @@ Token next(Lexer *lex)
 		case 'h':
 			return (Token){TOKEN_HEXA, strdup("h")};
 		default:
-			printf("%soutput%s ~ Unknown token: %c\n", RED, RESET, ch);
-			continue;
 			return (Token){TOKEN_UNKNOWN, NULL};
 		}
 	}
