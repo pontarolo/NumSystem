@@ -33,9 +33,36 @@
 // Global Variables Definition
 //------------------------------------------------------------------------------------
 
-static const char *hexa_char = "ABCDEF";
-static const char *dot_char = ".,";
-static const char decimal_to_hexa[16] = {
+static const char valid_binary_chars[TOKEN_BINARY] = {
+    '0',
+    '1'
+};
+
+static const char valid_decimal_chars[TOKEN_DECIMAL] = {
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9'
+};
+
+static const char valid_octal_chars[TOKEN_OCTAL] = {
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+};
+
+static const char valid_hexa_chars[TOKEN_HEXA] = {
     '0',
     '1',
     '2',
@@ -64,6 +91,7 @@ static const char decimal_to_hexa[16] = {
 
 // Static Functions
 
+static bool isValidNumber(char *, TokenType);
 static void reverse_range(char *, size_t, size_t);
 static void append_char(char *, char);
 static void *apply_twos_complement(char *);
@@ -74,14 +102,13 @@ static size_t calculate_digits(double, TokenType);
 // Normal Functions
 void throw(char *, bool);
 bool isHexaChar(char);
-bool isDot(char);
 bool isInfinity(double);
 char *char_to_string(char);
 char *binary(char *, TokenType);
 char *octal(char *, TokenType);
 char *hexa(char *, TokenType);
 char *double_to_string(double);
-char *string_in_given_base(char *value, TokenType src, TokenType dest);
+char *string_in_given_base(char *, TokenType, TokenType);
 double decimal(char *, TokenType);
 
 #if defined(_cplusplus)

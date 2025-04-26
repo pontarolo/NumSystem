@@ -29,11 +29,11 @@ Token next(Lexer *lex) {
 			continue;
 		}
 
-		if (isdigit(ch) || isHexaChar(ch) || isDot(ch)) {
+		if (isdigit(ch) || isHexaChar(ch) || ch == '.') {
 			size_t num_start = lex->pos;
 			char *value;
 
-			while (isdigit(lex->text[lex->pos]) || isHexaChar(lex->text[lex->pos]) || isDot(lex->text[lex->pos])) {
+			while (isdigit(lex->text[lex->pos]) || isHexaChar(lex->text[lex->pos]) || lex->text[lex->pos] == '.') {
 				lex->pos++;
 			}
 

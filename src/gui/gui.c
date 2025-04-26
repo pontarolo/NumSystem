@@ -129,6 +129,7 @@ int main(void) {
             strcpy(input, "");
 
             if (result == INFINITY) strcpy(output, "Division by zero");
+            else if (result == NAN) strcpy(output, "Invalid number.");
             else {
                 throw(string_in_given_base(double_to_string(result), TOKEN_DECIMAL, mode), true); 
                 strcpy(output, string_in_given_base(double_to_string(result), TOKEN_DECIMAL, mode));
@@ -141,8 +142,8 @@ int main(void) {
         for (unsigned short int i = 0; i < 10; i++)
             if (buttonWasPressed(num_buttons[i])) strcat(input, char_to_string(i + '0'));
 
-        for (unsigned short int i = 0; i < 6; i++)
-            if (buttonWasPressed(hexa_buttons[i])) strcat(input, char_to_string(hexa_char[i]));
+        for (unsigned short int i = 10; i < 16; i++)
+            if (buttonWasPressed(hexa_buttons[i - 10])) strcat(input, char_to_string(valid_hexa_chars[i]));
 
         BeginDrawing();
             ClearBackground(LIGHTGRAY);
@@ -214,9 +215,9 @@ int main(void) {
                 animate_button(num_buttons[i], char_to_string(i + '0'), BLUE, SKYBLUE);
             }
 
-            for (unsigned short int i = 0; i < 6; i++) {
-                draw_button(hexa_buttons[i], char_to_string(hexa_char[i]), DARKBLUE, WHITE);
-                animate_button(hexa_buttons[i], char_to_string(hexa_char[i]), BLUE, SKYBLUE);
+            for (unsigned short int i = 10; i < 16; i++) {
+                draw_button(hexa_buttons[i - 10], char_to_string(valid_hexa_chars[i]), DARKBLUE, WHITE);
+                animate_button(hexa_buttons[i - 10], char_to_string(valid_hexa_chars[i]), BLUE, SKYBLUE);
             }
 
         EndDrawing();

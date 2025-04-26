@@ -13,6 +13,21 @@
 // Utilitary Functions Implementation (Static)
 //------------------------------------------------------------------------------------
 
+// Checks if a number contains only valid chars
+static bool isValidNumber(char *value, TokenType base) {
+    bool isValid = false;
+
+    for (size_t i = 0; i < strlen(value); i++) {
+        isValid = false;
+        for (size_t j = 0; j < base; j++)
+            if (value[i] == valid_hexa_chars[j]) isValid = true;
+        
+        if(!isValid) return false;
+    }
+
+    return true;
+}
+
 // Reverses an array in a given range
 static void reverse_range(char *str, size_t start, size_t end) {
     while (start < end) {
@@ -101,18 +116,9 @@ void throw(char *message, bool sucess) {
 
 // Checks if a given char is a hexadecimal digit
 bool isHexaChar(char ch) {
-    for (unsigned short int i = 0; i < strlen(hexa_char); i++)
-        if (ch == hexa_char[i]) return true;
+    for (unsigned short int i = 0; i < TOKEN_HEXA; i++)
+        if (ch == valid_hexa_chars[i]) return true;
 
-    return false;
-}
-
-
-// Checks if a given char is a dot 
-bool isDot(char ch) {
-    for (unsigned short int i = 0; i < strlen(dot_char); i++)
-        if (ch == dot_char[i]) return true;
-        
     return false;
 }
 
@@ -271,7 +277,7 @@ char *hexa(char *value, TokenType base) {
 
         if (integer_number == 0) append_char(result, '0');
         else for (size_t i = 0; integer_number > 0; i++) {
-                ch = decimal_to_hexa[integer_number % TOKEN_HEXA];
+                ch = valid_hexa_chars[integer_number % TOKEN_HEXA];
                 integer_number /= TOKEN_HEXA;
 
                 append_char(result, ch);
@@ -293,7 +299,7 @@ char *hexa(char *value, TokenType base) {
                     break;
 
                 remainder *= TOKEN_HEXA;
-                ch = decimal_to_hexa[(int)remainder];
+                ch = valid_hexa_chars[(int)remainder];
                 append_char(result, ch);
                 remainder -= floor(remainder);
 
@@ -344,6 +350,11 @@ char *string_in_given_base(char *value, TokenType src, TokenType dest) {
 
 // Transforms any number in a decimal value
 double decimal(char *value, TokenType base) {
+    if (!isValidNumber(value, base)) {
+        throw("Invalid number.", false);
+        return NAN;
+    }
+
     bool isNegative = (value[0] == '-');
     if (isNegative) value++;
 
