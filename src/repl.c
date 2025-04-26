@@ -1,3 +1,7 @@
+//------------------------------------------------------------------------------------
+// Includes and Definitions
+//------------------------------------------------------------------------------------
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,13 +15,13 @@
 //------------------------------------------------------------------------------------
 
 
-int main() {
+int main(void) {
     size_t capacity = 64;
     char *buffer = (char *)calloc(capacity, sizeof(char)); 
     unsigned short int mode = TOKEN_DECIMAL;
 
     for (;;) {
-        printf("[NumSystem (%sinput%s)]: ", BLUE, RESET);
+        printf("[NumSystem (%sinput%s)]: ", TEXT_BLUE, RESET);
         fgets(buffer, capacity, stdin);
         buffer[strcspn(buffer, "\n")] = '\0';
 

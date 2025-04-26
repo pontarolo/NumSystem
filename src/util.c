@@ -1,3 +1,7 @@
+//------------------------------------------------------------------------------------
+// Includes and Definitions
+//------------------------------------------------------------------------------------
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
@@ -9,6 +13,7 @@
 // Utilitary Functions Implementation (Static)
 //------------------------------------------------------------------------------------
 
+// Reverses an array in a given range
 static void reverse_range(char *str, size_t start, size_t end) {
     while (start < end) {
         char temp = str[start];
@@ -19,13 +24,15 @@ static void reverse_range(char *str, size_t start, size_t end) {
     }
 }
 
+// Add a char to the end of a string
 static void append_char(char *str, char ch) {
     size_t len = strlen(str);
     str[len] = ch;
     str[len + 1] = '\0';
 }
 
-static void *twos(char *value) {
+// Needed for negative number representation
+static void *apply_twos_complement(char *value) {
     size_t aux = strlen(value);
 
     while (value[aux] != '1')
@@ -45,6 +52,7 @@ static void *twos(char *value) {
     return value;
 }
 
+// Transforms a char to a digit
 static short int char_to_digit(char ch) {
     if (isdigit(ch))
         return ch - '0';
@@ -55,6 +63,7 @@ static short int char_to_digit(char ch) {
     return 0xFFFF;
 }
 
+// Breaks the a given number in a integer part and a decimal part
 static FPoint break_str(const char *value, const char *dot) {
     FPoint number;
 
@@ -73,6 +82,7 @@ static FPoint break_str(const char *value, const char *dot) {
     return number;
 }
 
+// Calculates the number of digits of a number in a given base
 static size_t calculate_digits(double number, TokenType base) {
     return (number == 0) ? 1 : (size_t)ceil(log(number) / log(base)) + 1;
 }
@@ -81,27 +91,47 @@ static size_t calculate_digits(double number, TokenType base) {
 // Utilitary Functions Implementation (Normal)
 //------------------------------------------------------------------------------------
 
+// Displays a message to the user
 void throw(char *message, bool sucess) {
     if (sucess)
-        printf("%soutput%s ~ %s\n", GREEN, RESET, message);
+        printf("%soutput%s ~ %s\n", TEXT_GREEN, RESET, message);
     else
-        printf("%soutput%s ~ %s\n", RED, RESET, message);
+        printf("%soutput%s ~ %s\n", TEXT_RED, RESET, message);
 }
 
-bool ishexachar(char ch) {
+// Checks if a given char is a hexadecimal digit
+bool isHexaChar(char ch) {
     for (unsigned short int i = 0; i < strlen(hexa_char); i++)
         if (ch == hexa_char[i]) return true;
 
     return false;
 }
 
-bool isdot(char ch) {
+
+// Checks if a given char is a dot 
+bool isDot(char ch) {
     for (unsigned short int i = 0; i < strlen(dot_char); i++)
         if (ch == dot_char[i]) return true;
-
+        
     return false;
 }
 
+// Checks if a given number is -inf or +inf
+bool isInfinity(double number) {
+    return (number < -FLT_MAX || number > FLT_MAX);
+}
+
+
+// Transforms a char into a valid string
+char *char_to_string(char ch) {
+    char *str = (char *)calloc(2, sizeof(char));
+    str[0] = ch;
+    str[1] = '\0';
+
+    return str;
+}
+
+// Transforms any number in a binary string
 char *binary(char *value, TokenType base) {
     bool isNegative = (value[0] == '-');
     if (isNegative) {
@@ -113,7 +143,7 @@ char *binary(char *value, TokenType base) {
 
         if (strcmp(number_aux.integer, "0") != 0) {
             memcpy(aux + (16 - strlen(number_aux.integer)), number_aux.integer, strlen(number_aux.integer));
-            twos(aux);
+            apply_twos_complement(aux);
         }
 
         if (number_aux.hasDecimal) {
@@ -172,6 +202,7 @@ char *binary(char *value, TokenType base) {
     }
 }
 
+// Transforms any number in a octal string
 char *octal(char *value, TokenType base) {
     bool isNegative = (value[0] == '-');
     if (isNegative) value++;
@@ -224,6 +255,7 @@ char *octal(char *value, TokenType base) {
     }
 }
 
+// Transforms any number in a hexadecimal string
 char *hexa(char *value, TokenType base) {
     bool isNegative = (value[0] == '-');
     if (isNegative) value++;
@@ -278,6 +310,7 @@ char *hexa(char *value, TokenType base) {
     }
 }
 
+// Transforms a double in a valid string
 char *double_to_string(double number) {
     size_t size = snprintf(NULL, 0, "%f", number);
     if (size < 0) return NULL;
@@ -292,6 +325,7 @@ char *double_to_string(double number) {
     return (atoi(fpoint.decimal) == 0) ? fpoint.integer : str;
 }
 
+// Tranforms any number in any base to a number in any base
 char *string_in_given_base(char *value, TokenType src, TokenType dest) {
     switch (dest) {
     case TOKEN_BINARY:
@@ -308,6 +342,7 @@ char *string_in_given_base(char *value, TokenType src, TokenType dest) {
     }
 }
 
+// Transforms any number in a decimal value
 double decimal(char *value, TokenType base) {
     bool isNegative = (value[0] == '-');
     if (isNegative) value++;

@@ -1,8 +1,14 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+
+//------------------------------------------------------------------------------------
+// Includes and Definitions
+//------------------------------------------------------------------------------------
+
 #include <ctype.h>
 #include <stdbool.h>
+#include <float.h>
 #include "lexer.h"
 #include "../lib/colors/colors.h"
 
@@ -60,15 +66,17 @@ static const char decimal_to_hexa[16] = {
 
 static void reverse_range(char *, size_t, size_t);
 static void append_char(char *, char);
-static void *twos(char *);
+static void *apply_twos_complement(char *);
 static short int char_to_digit(char);
 static FPoint break_str(const char *, const char *);
 static size_t calculate_digits(double, TokenType);
 
 // Normal Functions
 void throw(char *, bool);
-bool ishexachar(char);
-bool isdot(char);
+bool isHexaChar(char);
+bool isDot(char);
+bool isInfinity(double);
+char *char_to_string(char);
 char *binary(char *, TokenType);
 char *octal(char *, TokenType);
 char *hexa(char *, TokenType);

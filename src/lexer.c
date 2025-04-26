@@ -1,3 +1,7 @@
+//------------------------------------------------------------------------------------
+// Includes and Definitions
+//------------------------------------------------------------------------------------
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -25,11 +29,11 @@ Token next(Lexer *lex) {
 			continue;
 		}
 
-		if (isdigit(ch) || ishexachar(ch) || isdot(ch)) {
+		if (isdigit(ch) || isHexaChar(ch) || isDot(ch)) {
 			size_t num_start = lex->pos;
 			char *value;
 
-			while (isdigit(lex->text[lex->pos]) || ishexachar(lex->text[lex->pos]) || isdot(lex->text[lex->pos])) {
+			while (isdigit(lex->text[lex->pos]) || isHexaChar(lex->text[lex->pos]) || isDot(lex->text[lex->pos])) {
 				lex->pos++;
 			}
 

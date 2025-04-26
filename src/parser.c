@@ -1,3 +1,7 @@
+//------------------------------------------------------------------------------------
+// Includes and Definitions
+//------------------------------------------------------------------------------------
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "parser.h"
@@ -51,6 +55,12 @@ static double parse_term(Parser *parser) {
 		case TOKEN_DIV:
 			eat(parser, TOKEN_DIV);
 			result /= parse_factor(parser);
+
+			if (isInfinity(result)) {  
+				throw("Division by zero", false);
+				return INFINITY;
+			}
+
 			break;
 		default:
 			throw("Invalid term.", false);
