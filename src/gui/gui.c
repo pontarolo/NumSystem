@@ -14,11 +14,13 @@
 // GUI Functions Implementation (Static)
 //------------------------------------------------------------------------------------
 
+// For drawing the calculator buttons
 static void draw_button(Rectangle button, const char *text, Color color, Color text_color) {
     DrawRectangleRec(button, color);
     DrawText(text, button.x + (button.width - MeasureText(text, 20)) / 2, button.y + (button.height - 20) / 2, 20, text_color);
 }
 
+// Giving them some spice
 static void animate_button(Rectangle button, char *text, Color hover_color, Color pressed_color) {
     if  (is_button_hovered(button)) {
         draw_button(button, text, hover_color, WHITE);
@@ -26,18 +28,22 @@ static void animate_button(Rectangle button, char *text, Color hover_color, Colo
     }
 }
 
+// Checks if a certain button was pressed
 static bool button_was_pressed(Rectangle button) {
     return (CheckCollisionPointRec(GetMousePosition(), button) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON));
 }
 
+// Checks if a certain button is being hovered
 static bool is_button_hovered(Rectangle button) {
     return (CheckCollisionPointRec(GetMousePosition(), button));
 }
 
+// Checks if a certain buttos is being pressed
 static bool is_button_pressed(Rectangle button) {
     return (CheckCollisionPointRec(GetMousePosition(), button) && IsMouseButtonDown(MOUSE_LEFT_BUTTON));
 }
 
+// Checks if it is time to clear the output string
 static bool should_clear_output(bool last_was_equal) {
     return ((CheckCollisionPointRec(GetMousePosition(), g_add_button) ||
      CheckCollisionPointRec(GetMousePosition(), g_sub_button) ||
@@ -155,8 +161,8 @@ int main(void) {
             BeginScissorMode(OFFSET_X, OFFSET_Y, (6 * BUTTON_WIDTH + 5 * PADDING), DISPLAY_HEIGHT);
 
                 DrawRectangle(OFFSET_X, OFFSET_Y, (6 * BUTTON_WIDTH + 5 * PADDING), DISPLAY_HEIGHT, WHITE);
-                DrawText(input, OFFSET_X + PADDING, OFFSET_Y + PADDING, 20, BLACK);
-                DrawText(output, OFFSET_X + PADDING, OFFSET_Y + PADDING, 20, BLACK);
+                DrawText(input, OFFSET_X + PADDING, OFFSET_Y + PADDING, 30, BLACK);
+                DrawText(output, OFFSET_X + PADDING, OFFSET_Y + PADDING, 30, BLACK);
 
             EndScissorMode();
 

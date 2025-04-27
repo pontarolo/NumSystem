@@ -12,7 +12,7 @@
 //------------------------------------------------------------------------------------
 
 // Parser advance
-static void eat(Parser *parser, TokenType type) {
+static void _eat(Parser *parser, TokenType type) {
 	if (parser->current_token.type == type) {
 		free(parser->current_token.value);
 		parser->current_token = _next(parser->lexer);
@@ -26,19 +26,21 @@ static double _parse_factor(Parser *parser) {
 	double result;
 
 	if (token.type == TOKEN_LPAREN) {
-		eat(parser, TOKEN_LPAREN);
+		_eat(parser, TOKEN_LPAREN);
 		result = parse_expression(parser);
-		eat(parser, TOKEN_RPAREN);
+		_eat(parser, TOKEN_RPAREN);
 		return result;
 	}
 
-	eat(parser, token.type);
+	_eat(parser, token.type);
 	if ((token.type == TOKEN_BINARY || token.type == TOKEN_OCTAL || token.type == TOKEN_DECIMAL || token.type == TOKEN_HEXA) && !isnan(decimal(parser->current_token.value, token.type))) {
 		result = decimal(parser->current_token.value, token.type);
-		eat(parser, TOKEN_NUMBER);
+		_eat(parser, TOKEN_NUMBER);
 		return result;
-	} else
+	} else {
 		throw("Invalid number.", false);
+		return NAN;
+	}
 }
 
 // For parsing multiplication and division
@@ -49,11 +51,11 @@ static double _parse_term(Parser *parser) {
 		Token operand = parser->current_token;
 		switch (operand.type) {
 		case TOKEN_MUL:
-			eat(parser, TOKEN_MUL);
+			_eat(parser, TOKEN_MUL);
 			result *= _parse_factor(parser);
 			break;
 		case TOKEN_DIV:
-			eat(parser, TOKEN_DIV);
+			_eat(parser, TOKEN_DIV);
 			result /= _parse_factor(parser);
 
 			if (result == INFINITY) throw("Division by zero", false);
@@ -82,11 +84,11 @@ double parse_expression(Parser *parser) {
 		Token operand = parser->current_token;
 		switch (operand.type) {
 		case TOKEN_PLUS:
-			eat(parser, TOKEN_PLUS);
+			_eat(parser, TOKEN_PLUS);
 			result += _parse_term(parser);
 			break;
 		case TOKEN_MINUS:
-			eat(parser, TOKEN_MINUS);
+			_eat(parser, TOKEN_MINUS);
 			result -= _parse_term(parser);
 			break;
 		default:

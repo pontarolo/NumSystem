@@ -259,7 +259,7 @@ char *_double_to_string(double number) {
     size_t size = snprintf(NULL, 0, "%f", number);
     if (size < 0) return NULL;
 
-    char *str = malloc(size + 1);
+    char *str = (char *)calloc(size + 1, sizeof(char));
     if (!str) return NULL;
     
     snprintf(str, size + 1, "%f", number);
