@@ -16,6 +16,10 @@
     #define PRECISION 8
 #endif
 
+#ifndef COMPLEMENT_SIZE
+    #define COMPLEMENT_SIZE 16
+#endif
+
 //----------------------------------------------------------------------------------
 // Structures Definition
 //----------------------------------------------------------------------------------
@@ -26,14 +30,14 @@
         char *integer;
         char *decimal;
         bool hasDecimal;
-    } FPoint;
+    } FloatingPoint;
 #endif
 
 //------------------------------------------------------------------------------------
 // Global Variables Definition
 //------------------------------------------------------------------------------------
 
-static const char valid_hexa_chars[TOKEN_HEXA] = {
+static const char g_valid_hexa_chars[TOKEN_HEXA] = {
     '0',
     '1',
     '2',
@@ -61,26 +65,27 @@ static const char valid_hexa_chars[TOKEN_HEXA] = {
 #endif
 
 // Static Functions
-
-static bool isValidNumber(char *, TokenType);
-static void reverse_range(char *, size_t, size_t);
-static void append_char(char *, char);
-static void sucessive_divisions(unsigned int, char *, TokenType);
-static void floating_point(double, char *, TokenType);
-static short int char_to_digit(char);
+static bool is_valid_number(char *, TokenType);
 static char *twos_complement(char *, unsigned short int, TokenType);
-static char *pad_right(char *, unsigned short int);
-static FPoint break_str(const char *, const char *);
-static size_t calculate_digits(double, TokenType);
+
+// Don't call these directly
+static FloatingPoint _break_number(const char *, const char *);
+static size_t _calculate_digits(double, TokenType);
+static void _reverse_range(char *, size_t, size_t);
+static void _append_char(char *, char);
+static void _sucessive_divisions(unsigned int, char *, TokenType);
+static void _floating_point(double, char *, TokenType);
+static short int _char_to_digit(char);
+static char *_pad_left(char *, unsigned short int);
+char *_char_to_string(char);
+char *_double_to_string(double);
+bool _is_hexa_char(char);
 
 // Normal Functions
 void throw(char *, bool);
-bool isHexaChar(char);
-char *char_to_string(char);
 char *binary(char *, TokenType);
 char *octal(char *, TokenType);
 char *hexa(char *, TokenType);
-char *double_to_string(double);
 char *string_in_given_base(char *, TokenType, TokenType);
 double decimal(char *, TokenType);
 

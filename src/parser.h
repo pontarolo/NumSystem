@@ -29,10 +29,10 @@
 	extern "C" {            
 #endif
 
-// Static Functions
-static void eat(Parser *, TokenType);
-static double parse_factor(Parser *);
-static double parse_term(Parser *);
+// Don't call these directly
+static void _eat(Parser *, TokenType);
+static double _parse_factor(Parser *);
+static double _parse_term(Parser *);
 
 // Normal Functions
 double parse_expression(Parser *);

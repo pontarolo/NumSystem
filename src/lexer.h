@@ -59,9 +59,11 @@
 	extern "C" {            
 #endif
 
+// Don't call these directly
+Token _next(Lexer *);
+
 // Normal Functions
 Lexer lexer(char *);
-Token next(Lexer *);
 
 #if defined(_cplusplus)
 }

@@ -46,13 +46,13 @@ int main(void) {
         }
 
         Lexer lex = lexer(buffer);
-	    Parser parser = {&lex, next(&lex)};
+	    Parser parser = {&lex, _next(&lex)};
         double result = parse_expression(&parser);
 
         if (result == INFINITY) continue;
         if (isnan(result)) printf("NaN");
 
-        throw(string_in_given_base(double_to_string(result), TOKEN_DECIMAL, mode), true);
+        throw(string_in_given_base(_double_to_string(result), TOKEN_DECIMAL, mode), true);
     }
     
     return 0;

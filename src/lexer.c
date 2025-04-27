@@ -21,7 +21,7 @@ Lexer lexer(char *text) {
 }
 
 // Tokenizer
-Token next(Lexer *lex) {
+Token _next(Lexer *lex) {
 	while (lex->text[lex->pos] != '\0') {
 		char ch = lex->text[lex->pos];
 		if (isspace(ch)) {
@@ -29,11 +29,11 @@ Token next(Lexer *lex) {
 			continue;
 		}
 
-		if (isdigit(ch) || isHexaChar(ch) || ch == '.') {
+		if (isdigit(ch) || _is_hexa_char(ch) || ch == '.') {
 			size_t num_start = lex->pos;
 			char *value;
 
-			while (isdigit(lex->text[lex->pos]) || isHexaChar(lex->text[lex->pos]) || lex->text[lex->pos] == '.') {
+			while (isdigit(lex->text[lex->pos]) || _is_hexa_char(lex->text[lex->pos]) || lex->text[lex->pos] == '.') {
 				lex->pos++;
 			}
 
@@ -48,28 +48,17 @@ Token next(Lexer *lex) {
 		lex->pos++;
 
 		switch (ch) {
-		case '+':
-			return (Token){TOKEN_PLUS, strdup("+")};
-		case '-':
-			return (Token){TOKEN_MINUS, strdup("-")};
-		case '*':
-			return (Token){TOKEN_MUL, strdup("*")};
-		case '/':
-			return (Token){TOKEN_DIV, strdup("/")};
-		case '(':
-			return (Token){TOKEN_LPAREN, strdup("(")};
-		case ')':
-			return (Token){TOKEN_RPAREN, strdup(")")};
-		case 'b':
-			return (Token){TOKEN_BINARY, strdup("b")};
-		case 'o':
-			return (Token){TOKEN_OCTAL, strdup("o")};
-		case 'd':
-			return (Token){TOKEN_DECIMAL, strdup("d")};
-		case 'h':
-			return (Token){TOKEN_HEXA, strdup("h")};
-		default:
-			return (Token){TOKEN_UNKNOWN, NULL};
+			case '+': return (Token){TOKEN_PLUS, strdup("+")};
+			case '-': return (Token){TOKEN_MINUS, strdup("-")};
+			case '*': return (Token){TOKEN_MUL, strdup("*")};
+			case '/': return (Token){TOKEN_DIV, strdup("/")};
+			case '(': return (Token){TOKEN_LPAREN, strdup("(")};
+			case ')': return (Token){TOKEN_RPAREN, strdup(")")};
+			case 'b': return (Token){TOKEN_BINARY, strdup("b")};
+			case 'o': return (Token){TOKEN_OCTAL, strdup("o")};
+			case 'd': return (Token){TOKEN_DECIMAL, strdup("d")};
+			case 'h': return (Token){TOKEN_HEXA, strdup("h")};
+			default: return (Token){TOKEN_UNKNOWN, NULL};
 		}
 	}
 

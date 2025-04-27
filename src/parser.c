@@ -15,13 +15,13 @@
 static void eat(Parser *parser, TokenType type) {
 	if (parser->current_token.type == type) {
 		free(parser->current_token.value);
-		parser->current_token = next(parser->lexer);
+		parser->current_token = _next(parser->lexer);
 	} else
 		throw("Can't eat the given token.", false);
 }
 
 // For parsing the number themselves
-static double parse_factor(Parser *parser) {
+static double _parse_factor(Parser *parser) {
 	Token token = parser->current_token;
 	double result;
 
@@ -42,19 +42,19 @@ static double parse_factor(Parser *parser) {
 }
 
 // For parsing multiplication and division
-static double parse_term(Parser *parser) {
-	double result = parse_factor(parser);
+static double _parse_term(Parser *parser) {
+	double result = _parse_factor(parser);
 
 	while (parser->current_token.type == TOKEN_MUL || parser->current_token.type == TOKEN_DIV) {
 		Token operand = parser->current_token;
 		switch (operand.type) {
 		case TOKEN_MUL:
 			eat(parser, TOKEN_MUL);
-			result *= parse_factor(parser);
+			result *= _parse_factor(parser);
 			break;
 		case TOKEN_DIV:
 			eat(parser, TOKEN_DIV);
-			result /= parse_factor(parser);
+			result /= _parse_factor(parser);
 
 			if (result == INFINITY) throw("Division by zero", false);
 
@@ -74,7 +74,7 @@ static double parse_term(Parser *parser) {
 
 // For parsing plus and minus
 double parse_expression(Parser *parser) {
-	double result = parse_term(parser);
+	double result = _parse_term(parser);
 
 	if (result == INFINITY) return result;
 
@@ -83,11 +83,11 @@ double parse_expression(Parser *parser) {
 		switch (operand.type) {
 		case TOKEN_PLUS:
 			eat(parser, TOKEN_PLUS);
-			result += parse_term(parser);
+			result += _parse_term(parser);
 			break;
 		case TOKEN_MINUS:
 			eat(parser, TOKEN_MINUS);
-			result -= parse_term(parser);
+			result -= _parse_term(parser);
 			break;
 		default:
 			throw("Invalid expression.", false);
