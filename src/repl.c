@@ -49,6 +49,9 @@ int main(void) {
 	    Parser parser = {&lex, next(&lex)};
         double result = parse_expression(&parser);
 
+        if (result == INFINITY) continue;
+        if (isnan(result)) printf("NaN");
+
         throw(string_in_given_base(double_to_string(result), TOKEN_DECIMAL, mode), true);
     }
     

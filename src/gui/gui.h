@@ -97,6 +97,10 @@ static Rectangle num_buttons[10] = {
 // GUI Functions
 //------------------------------------------------------------------------------------
 
+#if defined(__cplusplus)
+    extern "C" {            
+#endif
+
 // Static
 static void draw_button(Rectangle, const char *, Color, Color);
 static void animate_button(Rectangle button, char *text, Color hover_color, Color pressed_color);
@@ -104,5 +108,9 @@ static bool buttonWasPressed(Rectangle);
 static bool isButtonHovered(Rectangle);
 static bool isButtonPressed(Rectangle);
 static bool shouldClearOutput(bool);
+
+#if defined(_cplusplus)
+}
+#endif
 
 #endif

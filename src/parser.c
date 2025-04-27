@@ -33,12 +33,12 @@ static double parse_factor(Parser *parser) {
 	}
 
 	eat(parser, token.type);
-	if (token.type == TOKEN_BINARY || token.type == TOKEN_OCTAL || token.type == TOKEN_DECIMAL || token.type == TOKEN_HEXA) {
+	if ((token.type == TOKEN_BINARY || token.type == TOKEN_OCTAL || token.type == TOKEN_DECIMAL || token.type == TOKEN_HEXA) && !isnan(decimal(parser->current_token.value, token.type))) {
 		result = decimal(parser->current_token.value, token.type);
 		eat(parser, TOKEN_NUMBER);
 		return result;
 	} else
-		throw("Invalid factor.", false);
+		throw("Invalid number.", false);
 }
 
 // For parsing multiplication and division
@@ -56,10 +56,7 @@ static double parse_term(Parser *parser) {
 			eat(parser, TOKEN_DIV);
 			result /= parse_factor(parser);
 
-			if (isInfinity(result)) {  
-				throw("Division by zero", false);
-				return INFINITY;
-			}
+			if (result == INFINITY) throw("Division by zero", false);
 
 			break;
 		default:
@@ -75,10 +72,11 @@ static double parse_term(Parser *parser) {
 // Parser Functions Implementation (Normal)
 //------------------------------------------------------------------------------------
 
-
 // For parsing plus and minus
 double parse_expression(Parser *parser) {
 	double result = parse_term(parser);
+
+	if (result == INFINITY) return result;
 
 	while (parser->current_token.type == TOKEN_PLUS || parser->current_token.type == TOKEN_MINUS) {
 		Token operand = parser->current_token;

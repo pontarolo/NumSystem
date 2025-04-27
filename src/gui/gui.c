@@ -129,7 +129,7 @@ int main(void) {
             strcpy(input, "");
 
             if (result == INFINITY) strcpy(output, "Division by zero");
-            else if (result == NAN) strcpy(output, "Invalid number.");
+            else if (result == DBL_MAX) strcpy(output, "Invalid number.");
             else {
                 throw(string_in_given_base(double_to_string(result), TOKEN_DECIMAL, mode), true); 
                 strcpy(output, string_in_given_base(double_to_string(result), TOKEN_DECIMAL, mode));

@@ -33,35 +33,6 @@
 // Global Variables Definition
 //------------------------------------------------------------------------------------
 
-static const char valid_binary_chars[TOKEN_BINARY] = {
-    '0',
-    '1'
-};
-
-static const char valid_decimal_chars[TOKEN_DECIMAL] = {
-    '0',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9'
-};
-
-static const char valid_octal_chars[TOKEN_OCTAL] = {
-    '0',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-};
-
 static const char valid_hexa_chars[TOKEN_HEXA] = {
     '0',
     '1',
@@ -94,15 +65,17 @@ static const char valid_hexa_chars[TOKEN_HEXA] = {
 static bool isValidNumber(char *, TokenType);
 static void reverse_range(char *, size_t, size_t);
 static void append_char(char *, char);
-static void *apply_twos_complement(char *);
+static void sucessive_divisions(unsigned int, char *, TokenType);
+static void floating_point(double, char *, TokenType);
 static short int char_to_digit(char);
+static char *twos_complement(char *, unsigned short int, TokenType);
+static char *pad_right(char *, unsigned short int);
 static FPoint break_str(const char *, const char *);
 static size_t calculate_digits(double, TokenType);
 
 // Normal Functions
 void throw(char *, bool);
 bool isHexaChar(char);
-bool isInfinity(double);
 char *char_to_string(char);
 char *binary(char *, TokenType);
 char *octal(char *, TokenType);
