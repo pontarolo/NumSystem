@@ -93,7 +93,7 @@ static char *twos_complement(char *value, unsigned short int size, TokenType bas
         else aux[i] = '1';
     }
 
-    if (bin.hasDecimal) {
+    if (bin.has_decimal) {
         _append_char(aux, '.');
         strcat(aux, bin.decimal);
     }
@@ -124,11 +124,11 @@ static FloatingPoint _break_number(const char *value, const char *dot) {
         size_t int_len = pos - value;
         number.integer = strndup(value, int_len);
         number.decimal = strdup(pos + 1);
-        number.hasDecimal = true;
+        number.has_decimal = true;
     } else {
         number.integer = strdup(value);
         number.decimal = NULL;
-        number.hasDecimal = false;
+        number.has_decimal = false;
     }
 
     return number;
@@ -166,8 +166,8 @@ char *_char_to_string(char ch) {
 
 // Transforms any number in a binary string
 char *binary(char *value, TokenType base) {
-    bool isNegative = (value[0] == '-');
-    if (isNegative) {
+    bool is_negative = (value[0] == '-');
+    if (is_negative) {
         value++;
         return twos_complement(binary(value, base), COMPLEMENT_SIZE, base);
     }
@@ -181,7 +181,7 @@ char *binary(char *value, TokenType base) {
             _sucessive_divisions(integer_number, result, TOKEN_BINARY);
             _reverse_range(result, 0, strlen(result) - 1);
 
-            if (number.hasDecimal) {
+            if (number.has_decimal) {
                 _append_char(result, '.');
                 _floating_point(atoi(number.decimal) / pow(10, strlen(number.decimal)), result, TOKEN_BINARY);
             }
@@ -197,8 +197,8 @@ char *binary(char *value, TokenType base) {
 
 // Transforms any number in a octal string
 char *octal(char *value, TokenType base) {
-    bool isNegative = (value[0] == '-');
-    if (isNegative) value++;
+    bool is_negative = (value[0] == '-');
+    if (is_negative) value++;
 
     FloatingPoint number = _break_number(value, ".");
     char *result = (char *)calloc(_calculate_digits(decimal(value, base), TOKEN_OCTAL), sizeof(char));
@@ -207,10 +207,10 @@ char *octal(char *value, TokenType base) {
         case TOKEN_DECIMAL:
             unsigned int integer_number = atoi(number.integer);
             _sucessive_divisions(integer_number, result, TOKEN_OCTAL);
-            if (isNegative) _append_char(result, '-');
+            if (is_negative) _append_char(result, '-');
             _reverse_range(result, 0, strlen(result) - 1);
 
-            if (number.hasDecimal) {
+            if (number.has_decimal) {
                 _append_char(result, '.');
                 _floating_point(atoi(number.decimal) / pow(10, strlen(number.decimal)), result, TOKEN_OCTAL);
             }
@@ -226,8 +226,8 @@ char *octal(char *value, TokenType base) {
 
 // Transforms any number in a hexadecimal string
 char *hexa(char *value, TokenType base) {
-    bool isNegative = (value[0] == '-');
-    if (isNegative) value++;
+    bool is_negative = (value[0] == '-');
+    if (is_negative) value++;
 
     FloatingPoint number = _break_number(value, ".");
     char *result = (char *)calloc(_calculate_digits(decimal(value, base), TOKEN_HEXA), sizeof(char));
@@ -237,10 +237,10 @@ char *hexa(char *value, TokenType base) {
         case TOKEN_DECIMAL:
             unsigned int integer_number = atoi(number.integer);
             _sucessive_divisions(integer_number, result, TOKEN_HEXA);
-            if(isNegative) _append_char(result, '-');
+            if(is_negative) _append_char(result, '-');
             _reverse_range(result, 0, strlen(result) - 1);
 
-            if (number.hasDecimal) {
+            if (number.has_decimal) {
                 _append_char(result, '.');
                 _floating_point(atoi(number.decimal) / pow(10, strlen(number.decimal)), result, TOKEN_HEXA);
             }
@@ -288,8 +288,8 @@ char *string_in_given_base(char *value, TokenType src, TokenType dest) {
 
 // Transforms any number in a decimal value
 double decimal(char *value, TokenType base) {
-    bool isNegative = (value[0] == '-');
-    if (isNegative) value++;
+    bool is_negative = (value[0] == '-');
+    if (is_negative) value++;
 
     if (!is_valid_number(value, base)) return NAN;
 
@@ -301,11 +301,11 @@ double decimal(char *value, TokenType base) {
         integer_sum += _char_to_digit(number.integer[i]) * pow(base, strlen(number.integer) - i - 1);
     }
 
-    if (number.hasDecimal)
+    if (number.has_decimal)
         for (size_t i = 0; i < strlen(number.decimal); i++) {
             if (number.decimal[i] == '0') continue;
             decimal_sum += _char_to_digit(number.decimal[i]) * pow(base, -(int)(i + 1));
         }
 
-    return isNegative ? -(integer_sum + decimal_sum) : integer_sum + decimal_sum;
+    return is_negative ? -(integer_sum + decimal_sum) : integer_sum + decimal_sum;
 }

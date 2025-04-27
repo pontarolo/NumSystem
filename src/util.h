@@ -29,7 +29,7 @@
     typedef struct {
         char *integer;
         char *decimal;
-        bool hasDecimal;
+        bool has_decimal;
     } FloatingPoint;
 #endif
 
