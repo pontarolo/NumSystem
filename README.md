@@ -4,9 +4,14 @@ This is a project made for a college assignment in Computer Architecture and Org
 
 ![alt text](./assets/example.png "Example")
 
+# Dependencies
+
+- Raylib: https://www.raylib.com/
+
+
 # How to build it
 
-For text-based mode
+For text-based mode:
 
 ```bash
 $ git clone https://github.com/pontarolo/NumSystem
@@ -14,7 +19,7 @@ cd NumSystem
 make text
 ```
 
-For graphical mode
+For graphical mode:
 
 ```bash
 $ git clone https://github.com/pontarolo/NumSystem
