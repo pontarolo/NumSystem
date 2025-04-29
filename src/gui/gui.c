@@ -20,8 +20,21 @@ static void draw_button(Rectangle button, const char *text, Color color, Color t
     DrawText(text, button.x + (button.width - MeasureText(text, 20)) / 2, button.y + (button.height - 20) / 2, 20, text_color);
 }
 
+// For drawing text that fit in the screen size
+static void draw_fitting_text(const char *text, int pos_x, int pos_y, int max_width, Color color) {
+    int font_size = 20;
+    int text_width = MeasureText(text, font_size);
+
+    while (text_width > max_width && font_size > 5) {
+        font_size--;
+        text_width = MeasureText(text, font_size);
+    }
+
+    DrawText(text, pos_x, pos_y, font_size, color);
+}
+
 // Giving them some spice
-static void animate_button(Rectangle button, char *text, Color hover_color, Color pressed_color) {
+static void animate_button(Rectangle button, const char *text, Color hover_color, Color pressed_color) {
     if  (is_button_hovered(button)) {
         draw_button(button, text, hover_color, WHITE);
         if (is_button_pressed(button)) draw_button(button, text, pressed_color, WHITE);
@@ -161,8 +174,8 @@ int main(void) {
             BeginScissorMode(OFFSET_X, OFFSET_Y, (6 * BUTTON_WIDTH + 5 * PADDING), DISPLAY_HEIGHT);
 
                 DrawRectangle(OFFSET_X, OFFSET_Y, (6 * BUTTON_WIDTH + 5 * PADDING), DISPLAY_HEIGHT, WHITE);
-                DrawText(input, OFFSET_X + PADDING, OFFSET_Y + PADDING, 30, BLACK);
-                DrawText(output, OFFSET_X + PADDING, OFFSET_Y + PADDING, 30, BLACK);
+                draw_fitting_text(input, OFFSET_X + PADDING, OFFSET_Y + PADDING, (6 * BUTTON_WIDTH + 5 * PADDING) - 2 * PADDING, BLACK);
+                draw_fitting_text(output, OFFSET_X + PADDING, OFFSET_Y + PADDING, (6 * BUTTON_WIDTH + 5 * PADDING) - 2 * PADDING, BLACK);
 
             EndScissorMode();
 

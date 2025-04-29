@@ -16,8 +16,7 @@ static void _eat(Parser *parser, TokenType type) {
 	if (parser->current_token.type == type) {
 		free(parser->current_token.value);
 		parser->current_token = _next(parser->lexer);
-	} else
-		throw("Can't eat the given token.", false);
+	} else throw("Can't eat the given token.", false);
 }
 
 // For parsing the number themselves

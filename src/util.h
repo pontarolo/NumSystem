@@ -70,13 +70,13 @@ static char *twos_complement(char *, unsigned short int, TokenType);
 
 // Don't call these directly
 static FloatingPoint _break_number(const char *, const char *);
-static size_t _calculate_digits(double, TokenType);
+static size_t _calculate_digits(const double, TokenType);
 static void _reverse_range(char *, size_t, size_t);
 static void _append_char(char *, char);
 static void _sucessive_divisions(unsigned int, char *, TokenType);
 static void _floating_point(double, char *, TokenType);
 static short int _char_to_digit(char);
-static char *_pad_left(char *, unsigned short int);
+static char *_pad_left(char *, const unsigned short int);
 char *_char_to_string(char);
 char *_double_to_string(double);
 bool _is_hexa_char(char);

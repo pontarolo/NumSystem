@@ -103,7 +103,8 @@ static Rectangle g_num_buttons[10] = {
 
 // Static
 static void draw_button(Rectangle, const char *, Color, Color);
-static void animate_button(Rectangle button, char *text, Color hover_color, Color pressed_color);
+static void draw_fitting_text(const char *, int, int, int, Color);
+static void animate_button(Rectangle, const char *, Color, Color);
 static bool button_was_pressed(Rectangle);
 static bool is_button_hovered(Rectangle);
 static bool is_button_pressed(Rectangle);

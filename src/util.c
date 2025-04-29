@@ -15,12 +15,12 @@
 
 // Checks if a number contains only valid chars
 static bool is_valid_number(char *value, TokenType base) {
-    bool isValid = false;
+    bool is_valid = false;
 
     for (size_t i = 0; i < strlen(value); i++) {
-        isValid = false;
-        for (size_t j = 0; j < base; j++) if (value[i] == g_valid_hexa_chars[j] || value[i] == '.') isValid = true;
-        if(!isValid) return false;
+        is_valid = false;
+        for (size_t j = 0; j < base; j++) if (value[i] == g_valid_hexa_chars[j] || value[i] == '.') is_valid = true;
+        if(!is_valid) return false;
     }
 
     return true;
@@ -46,7 +46,8 @@ static void _append_char(char *str, char ch) {
 
 // Lower base conversions
 static void _sucessive_divisions(unsigned int value, char *result, TokenType base) {
-    if (value == 0) _append_char(result, '0');
+    if (value == 0) 
+        _append_char(result, '0');
     else for (size_t i = 0; value > 0; i++) {
         char ch = g_valid_hexa_chars[value % base];
         value /= base;
@@ -56,7 +57,7 @@ static void _sucessive_divisions(unsigned int value, char *result, TokenType bas
 
 // For dealing with the decimal part of a given number
 static void _floating_point(double remainder, char *result, TokenType base) {
-    for (size_t i = 0; (remainder != 0.0f || i == PRECISION); i++) {
+    for (size_t i = 0; remainder > 0.0 && i < PRECISION; i++) {
         remainder *= base;
         char ch = g_valid_hexa_chars[(int)remainder];
         _append_char(result, ch);
@@ -74,7 +75,6 @@ static short int _char_to_digit(char ch) {
 
 // Needed for negative number representation
 static char *twos_complement(char *value, unsigned short int size, TokenType base) {
-    
     if (strlen(value) >= COMPLEMENT_SIZE) size *= 2;
 
     FloatingPoint bin = _break_number(value, ".");
@@ -82,30 +82,31 @@ static char *twos_complement(char *value, unsigned short int size, TokenType bas
 
     strcpy(aux, _pad_left(bin.integer, size));
 
-    size_t i = 0;
-
-    for (i = strlen(aux); aux[i] != '1'; i--);
-
-    i -= 1;
-
-    for (i; i > 0; i--) {
-        if (aux[i] == '1') aux[i] = '0';
-        else aux[i] = '1';
-    }
-
     if (bin.has_decimal) {
         _append_char(aux, '.');
         strcat(aux, bin.decimal);
     }
 
+    size_t i = strlen(aux);
+
+    for (i; aux[i] != '1'; i--);
+
+    for (i; i > 0; i--) {
+        if (aux[i] == '1') aux[i] = '0';
+        else if (aux[i] == '0') aux[i] = '1';
+    }
+
     aux[0] = (aux[0] == '1') ? '0' : '1';
     aux[strlen(aux)] = '\0';
+
+    free(bin.integer);
+    if (bin.decimal) free(bin.decimal);
 
     return aux;
 }
 
 // Stuffing
-static char *_pad_left(char *value, unsigned short int size) {
+static char *_pad_left(char *value, const unsigned short int size) {
     char *aux = (char *)calloc(size + 1, sizeof(char));
 
     memset(aux, '0', size);
@@ -135,8 +136,8 @@ static FloatingPoint _break_number(const char *value, const char *dot) {
 }
 
 // Calculates the number of digits of a number in a given base
-static size_t _calculate_digits(double number, TokenType base) {
-    return (number == 0) ? 1 : (size_t)ceil(log(number) / log(base)) + 1;
+static size_t _calculate_digits(const double number, TokenType base) {
+    return (number == 0) ? 2 : (size_t)ceil(log(number) / log(base)) + 4;
 }
 
 //------------------------------------------------------------------------------------
