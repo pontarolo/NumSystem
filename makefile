@@ -1,26 +1,29 @@
-SRC_DIR := ./src
-BIN_DIR := ./bin
-TARGET := linux-release-x86-64
+SRC_DIR = ./src
+GUI_SRC_DIR = $(SRC_DIR)/gui
+BIN_TEXT_DIR = ./bin/text
+BIN_GUI_DIR = ./bin/gui
 
-SRCS := $(wildcard $(SRC_DIR)/*.c)
-OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BIN_DIR)/%.o)
+TEXT_SRC = $(wildcard $(SRC_DIR)/*.c)
+GUI_SRC = $(filter-out $(SRC_DIR)/repl.c, $(wildcard $(SRC_DIR)/*.c) $(wildcard $(GUI_SRC_DIR)/*.c))
 
-CC := gcc
-CFLAGS := -O2 -m64
-LDFLAGS := -lm
+CC = gcc
+CFLAGS = -Wall -Wextra -O2
 
-all: $(BIN_DIR)/$(TARGET)
+GUI_FLAGS = -lraylib -lm -lpthread -ldl -lX11
 
-$(BIN_DIR)/$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+TEXT_FLAGS = -lm
 
-$(BIN_DIR)/%.o: $(SRC_DIR)/%.c | $(BIN_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+all: text gui
 
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
+text: $(TEXT_SRC)
+	@mkdir -p $(BIN_TEXT_DIR)
+	$(CC) $(CFLAGS) $(TEXT_SRC) $(TEXT_FLAGS) -o $(BIN_TEXT_DIR)/linux-release-x86-text
+
+gui: $(GUI_SRC)
+	@mkdir -p $(BIN_GUI_DIR)
+	$(CC) $(CFLAGS) $(GUI_SRC) $(GUI_FLAGS) -o $(BIN_GUI_DIR)/linux-release-x86-gui
 
 clean:
-	rm -rf $(BIN_DIR)
+	rm -rf $(BIN_TEXT_DIR) $(BIN_GUI_DIR)
 
-.PHONY: all clean
+.PHONY: all text gui clean

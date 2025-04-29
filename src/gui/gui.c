@@ -152,7 +152,7 @@ int main(void) {
             strcpy(input, "");
 
             if (result == INFINITY) strcpy(output, "Division by zero");
-            else if (isnan(result)) strcpy(output, "Invalid number.");
+            else if (isnan(result)) strcpy(output, "Invalid number or operation.");
             else {
                 throw(string_in_given_base(_double_to_string(result), TOKEN_DECIMAL, mode), true); 
                 strcpy(output, string_in_given_base(_double_to_string(result), TOKEN_DECIMAL, mode));
@@ -197,16 +197,16 @@ int main(void) {
             draw_button(g_clear_button, "C", RED, WHITE);
             animate_button(g_clear_button, "C", MAROON, (Color){139, 0, 0, 255});
 
-            draw_button(g_binary_button, "B", DARKBLUE, WHITE);
+            draw_button(g_binary_button, "B", BLUE, WHITE);
             animate_button(g_binary_button, "B", BLUE, SKYBLUE);
 
-            draw_button(g_octal_button, "O", DARKBLUE, WHITE);
+            draw_button(g_octal_button, "O", BLUE, WHITE);
             animate_button(g_octal_button, "O", BLUE, SKYBLUE);
 
-            draw_button(g_decimal_button, "D", DARKBLUE, WHITE);
+            draw_button(g_decimal_button, "D", BLUE, WHITE);
             animate_button(g_decimal_button, "D", BLUE, SKYBLUE);
 
-            draw_button(g_hexa_button, "H", DARKBLUE, WHITE);
+            draw_button(g_hexa_button, "H", BLUE, WHITE);
             animate_button(g_hexa_button, "H", BLUE, SKYBLUE);
 
             draw_button(g_rparen_button, ")", DARKBLUE, WHITE);
