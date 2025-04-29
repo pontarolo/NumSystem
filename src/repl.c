@@ -53,6 +53,8 @@ int main(void) {
 
         throw(string_in_given_base(_double_to_string(result), TOKEN_DECIMAL, mode), true);
     }
+
+    free(buffer);
     
     return 0;
 }
